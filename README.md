@@ -20,10 +20,10 @@ With this Retirement Microsoft offered a new method using [Workflows](https://pr
 
 | with parameter |	required/optional |	default	| description |
 | --- | --- | --- | --- |
-| valid_responses | false | 200,202 | Valid responses from the Teams workflow (comma-separated)|
+| valid_responses | false | 200,202 | Valid responses from the Teams workflow (comma-separated) |
 | raw | false | | Raw Adaptive Card JSON |
 | message | false \| **true** when NOT using raw | | Message to post to Teams |
-| title | false  \| **true** when NOT using raw | | Title of the message|
+| title | false  \| **true** when NOT using raw | | Title of the message |
 | style | false | default | Style of the message |
 | webhook_url | true | | Webhook URL for the Teams channel |
 | payload | false | false | Print the payload |
