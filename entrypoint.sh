@@ -74,5 +74,5 @@ else
 fi
 
 # Set Output
-echo "::set-output response=${RESPONSE}"
-echo "::set-output message=${MESSAGE}"
+echo "response=${RESPONSE}" >> "${GITHUB_OUTPUT}"
+echo "message=${MESSAGE}" >> "${GITHUB_OUTPUT}"
