@@ -26,7 +26,7 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: "Get Previous tag"
@@ -38,7 +38,7 @@ jobs:
         id: versiontag
         run: |
           [ ! -f "./${VERSION_FILE}" ] && echo "ERROR: ./${VERSION_FILE} missing." && exit 1
-          VERSION="$(cat "${VERSION_FILE}" | tr -d "^v")"
+          VERSION="$(tr -d "^v" < "${VERSION_FILE}")"
           # shellcheck disable=SC2002
           echo "VERSION=${VERSION}" >> "${GITHUB_OUTPUT}"
           echo "MINOR=${VERSION%.*}" >> "${GITHUB_ENV}"
