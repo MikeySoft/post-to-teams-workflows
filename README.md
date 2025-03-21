@@ -1,6 +1,6 @@
 # post-to-teams-workflows
 
-Github action to post to Microsoft Teams Workflows using a Adaptive Card.
+GitHub Action to post to Microsoft Teams Workflows using a Adaptive Card.
 
 Starting October 2024 Microsoft [Retired](https://devblogs.microsoft.com/microsoft365dev/retirement-of-office-365-connectors-within-microsoft-teams/) the `incoming webhook` functionality on Channels.
 
@@ -8,9 +8,9 @@ With this Retirement Microsoft offered a new method using [Workflows](https://pr
 
 ## Features
 
-* Post simple Title/Message Card
-* Control simple card style (good, attention, warning, ...)
-* Post Card from RAW input
+- Post simple Title/Message Card
+- Control simple card style (good, attention, warning, ...)
+- Post Card from RAW input
 
 ## Design Card
 
@@ -18,19 +18,21 @@ With this Retirement Microsoft offered a new method using [Workflows](https://pr
 
 ## Usage
 
-| with parameter |	required/optional |	default	| description |
-| --- | --- | --- | --- |
-| valid_responses | false | 200,202 | Valid responses from the Teams workflow (comma-separated) |
-| raw | false | | Raw Adaptive Card JSON |
-| message | false \| **true** when NOT using raw | | Message to post to Teams |
-| title | false  \| **true** when NOT using raw | | Title of the message |
-| style | false | default | Style of the message |
-| webhook_url | true | | Webhook URL for the Teams channel |
-| payload | false | false | Print the payload |
+| with parameter  | required/optional                    | default | description                                               |
+| --------------- | ------------------------------------ | ------- | --------------------------------------------------------- |
+| valid_responses | false                                | 200,202 | Valid responses from the Teams workflow (comma-separated) |
+| raw             | false                                |         | Raw Adaptive Card JSON                                    |
+| message         | false \| **true** when NOT using raw |         | Message to post to Teams                                  |
+| title           | false \| **true** when NOT using raw |         | Title of the message                                      |
+| style           | false                                | default | Style of the message                                      |
+| webhook_url     | true                                 |         | Webhook URL for the Teams channel                         |
+| payload         | false                                | false   | Print the payload                                         |
 
 Please refer [action.yml](./action.yml) for more details.
 
 ## Examples
+
+gith
 
 ```yml
 on: [push]
@@ -40,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Simple Post
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./
         id: post-to-teams
@@ -54,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Simple Successful Post
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./
         id: post-to-teams
@@ -67,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Print the payload
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./
         id: post-to-teams
@@ -80,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Raw Payload
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./
         id: post-to-teams

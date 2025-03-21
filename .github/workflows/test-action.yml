@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test with expected failure response
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./ # Uses an action in the root directory
         id: post-to-teams
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test with payload output
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./ # Uses an action in the root directory
         id: post-to-teams
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test with raw payload
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Post to Microsoft Teams
         uses: ./ # Uses an action in the root directory
         id: post-to-teams
