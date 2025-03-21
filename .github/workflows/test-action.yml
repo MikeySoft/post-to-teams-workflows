@@ -1,5 +1,7 @@
 on: [push]
 
+permissions: read-all
+
 jobs:
   test-plain:
     runs-on: ubuntu-latest
