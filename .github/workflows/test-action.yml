@@ -1,0 +1,77 @@
+on: [push]
+
+permissions: read-all
+
+jobs:
+  test-plain:
+    runs-on: ubuntu-latest
+    name: Test with expected failure response
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post to Microsoft Teams
+        uses: ./ # Uses an action in the root directory
+        id: post-to-teams
+        with:
+          title: "Hello from GitHub Actions"
+          message: "This is a message from GitHub Actions"
+          webhook_url: "http://teams.com"
+          valid_responses: "405"
+      - name: Get the response
+        run: echo "${{ steps.post-to-teams.outputs.response }} ${{ steps.post-to-teams.outputs.message }}"
+  test-plain-payload:
+    runs-on: ubuntu-latest
+    name: Test with payload output
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post to Microsoft Teams
+        uses: ./ # Uses an action in the root directory
+        id: post-to-teams
+        with:
+          title: "Hello from GitHub Actions"
+          message: "This is a message from GitHub Actions"
+          payload: true
+          webhook_url: "http://teams.com"
+          valid_responses: "405"
+  test-raw-payload:
+    runs-on: ubuntu-latest
+    name: Test with raw payload
+    steps:
+      - uses: actions/checkout@v4
+      - name: Post to Microsoft Teams
+        uses: ./ # Uses an action in the root directory
+        id: post-to-teams
+        with:
+          raw: >-
+            {
+              "type": "message",
+              "attachments": [
+                {
+                  "contentType": "application/vnd.microsoft.card.adaptive",
+                  "content": {
+                    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                    "type": "AdaptiveCard",
+                    "version": "1.0",
+                    "msteams": {
+                      "width": "Full"
+                    },
+                    "body": [
+                      {
+                        "type": "TextBlock",
+                        "text": "Title",
+                        "weight": "bolder",
+                        "size": "medium",
+                        "wrap": "true"
+                      },
+                      {
+                        "type": "TextBlock",
+                        "text": "Message",
+                        "wrap": "true"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          payload: true
+          webhook_url: "http://teams.com"
+          valid_responses: "405"

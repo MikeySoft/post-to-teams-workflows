@@ -1,0 +1,51 @@
+name: "Post to Microsoft Teams Workflow"
+description: "Post a Microsoft Adaptive Card to a Microsoft Teams channel through a Teams Workflow"
+inputs:
+  valid_responses:
+    description: "Valid responses from the Teams workflow (comma-separated)"
+    required: false
+    default: "200,202"
+  raw:
+    description: "Raw Adaptive Card JSON"
+    required: false
+    default: "null"
+  message:
+    description: "Message to post to Teams"
+    required: false
+    default: "null"
+  title:
+    description: "Title of the message"
+    required: false
+    default: "null"
+  style:
+    description: "Style of the message"
+    required: false
+    default: "default"
+    options:
+      - default
+      - good
+      - attention
+      - warning
+      - emphasis
+      - accent
+  webhook_url:
+    description: "Webhook URL for the Teams channel"
+    required: true
+  payload:
+    description: "Print the payload"
+    required: false
+    default: false
+outputs:
+  response:
+    description: "Response of the HTTP POST request"
+  message:
+    description: "Response Message of the HTTP POST request"
+runs:
+  using: "docker"
+  image: "./Dockerfile"
+  args:
+    - ${{ inputs.raw }}
+    - ${{ inputs.message }}
+    - ${{ inputs.title }}
+    - ${{ inputs.style }}
+    - ${{ inputs.webhook_url }}
