@@ -1,4 +1,6 @@
-# post-to-teams-workflows
+![CI workflow](https://github.com/mikeysoft/post-to-teams-workflows/actions/workflows/continuous-integration.yml/badge.svg)![Tests workflow](https://github.com/mikeysoft/post-to-teams-workflows/actions/workflows/test-action.yml/badge.svg)
+
+# About
 
 GitHub Action to post to Microsoft Teams Workflows using a Adaptive Card.
 
