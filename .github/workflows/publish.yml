@@ -26,9 +26,10 @@ jobs:
         run: |
           [ ! -f "./${VERSION_FILE}" ] && echo "ERROR: ./${VERSION_FILE} missing." && exit 1
           VERSION="$(tr -d "^v" < "${VERSION_FILE}")"
-          echo "PATCH=${VERSION}
-          MINOR=${VERSION%.*}
-          MAJOR=${VERSION%%.*}" | tr -d ' ' | tee -a "${GITHUB_OUTPUT}"
+          # shellcheck disable=SC2002
+          echo "PATCH=${VERSION}" | tee -a "${GITHUB_OUTPUT}"
+          echo "MINOR=${VERSION%.*}" | tee -a "${GITHUB_OUTPUT}"
+          echo "MAJOR=${VERSION%%.*}" | tee -a "${GITHUB_OUTPUT}"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

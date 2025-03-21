@@ -26,7 +26,7 @@ jobs:
       id-token: write
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: "Get Previous tag"
@@ -38,13 +38,13 @@ jobs:
         id: versiontag
         run: |
           [ ! -f "./${VERSION_FILE}" ] && echo "ERROR: ./${VERSION_FILE} missing." && exit 1
-          VERSION="$(tr -d "^v" < "${VERSION_FILE}")"
-          echo "PATCH=${VERSION}
-          MINOR=${VERSION%.*}
-          MAJOR=${VERSION%%.*}" | tr -d ' ' | tee -a "${GITHUB_OUTPUT}"
+          VERSION="$(cat "${VERSION_FILE}" | tr -d "^v")"
+          # shellcheck disable=SC2002
+          echo "VERSION=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "MINOR=${VERSION%.*}" >> "${GITHUB_ENV}"
+          echo "MAJOR=${VERSION%%.*}" >> "${GITHUB_OUTPUT}"
       - name: Validate Version
         run: |
-          readonly SCRIPTTERM=true
           RESET="\033[0m"
           RED='\033[0;31m'
           GREEN="\033[0;32m"
@@ -53,9 +53,14 @@ jobs:
           NEWTAG=${{ steps.versiontag.outputs.VERSION }}
           echo -e "Current tag: ${PREVIOUSTAG} \nNew Tag: ${NEWTAG}"
           echo
-          [ "${PREVIOUSTAG}" == "${NEWTAG}" ] && echo "${RED}ERROR:${RESET} (Current tag: ${PREVIOUSTAG} == New Tag: ${NEWTAG}), Version in ${VERSION_FILE} should be higher.!" && exit 1 || true
-          echo "New Tag is ${GREEN}Valid.${RESET}"
-
+          if [ "${PREVIOUSTAG}" == "${NEWTAG}" ]; then
+            echo "${RED}ERROR:${RESET} (Current tag: ${PREVIOUSTAG} == New Tag: ${NEWTAG}), Version in ${VERSION_FILE} should be higher.!"
+            exit 1
+          elif [ -z "${NEWTAG}" ]; then
+            echo "${RED}ERROR:${RESET} New Tag is empty.!"
+          else
+            echo -e "\nNew Tag is ${GREEN}Valid.${RESET}"
+          fi
   lint:
     name: Lint
     if: always()
