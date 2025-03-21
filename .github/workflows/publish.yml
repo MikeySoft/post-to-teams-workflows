@@ -1,0 +1,66 @@
+name: Publish
+
+permissions: read-all
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  VERSION_FILE: version.txt
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get Version from ${{ env.VERSION_FILE }}
+        id: versionfile
+        run: |
+          [ ! -f "./${VERSION_FILE}" ] && echo "ERROR: ./${VERSION_FILE} missing." && exit 1
+          VERSION="$(cat "${VERSION_FILE}" | tr -d "^v")"
+          echo "PATCH=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "MINOR=${VERSION%.*}" >> "${GITHUB_OUTPUT}"
+          echo "MAJOR=${VERSION%%.*}" >> "${GITHUB_OUTPUT}"
+          echo "PATCH=${VERSION}"
+          echo "MINOR=${VERSION%.*}"
+          echo "MAJOR=${VERSION%%.*}"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.versionfile.outputs.PATCH }}
+          release_name: Release v${{ steps.versionfile.outputs.PATCH }}
+      - name: Tag Minor and Major
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_LATEST: true
+        run: |
+          git config --global user.name "${GITHUB_REPOSITORY_OWNER}"
+          git config --global user.email "${GITHUB_REPOSITORY_OWNER}"
+          if [ "${TAG_LATEST,,}" == "true" ];then
+            TAGS=("v${{ steps.versionfile.outputs.MINOR }}" "v${{ steps.versionfile.outputs.MAJOR }}" "latest")
+          else
+            TAGS=("v${{ steps.versionfile.outputs.MINOR }}" "v${{ steps.versionfile.outputs.MAJOR }}");
+          fi
+
+          for tag in "${TAGS[@]}"; do
+            echo "Tagging ${tag}."
+            # Remove if exists
+            if [[ "$(git tag -l "${tag}")" == "${tag}" ]]; then
+              git tag -d "${tag}"
+              git push origin --delete "${tag}"
+            fi
+            # Create Tag
+            git tag "${tag}" -m "Release v${{ steps.versionfile.outputs.PATCH }}"
+            git push origin "${tag}"
+          done

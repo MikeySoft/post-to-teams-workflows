@@ -1,8 +1,6 @@
 name: continuous-integration
 on:
   push:
-    branches:
-      - main
   pull_request:
     types:
       - opened
@@ -17,9 +15,50 @@ on:
 
 permissions: read-all
 
+env:
+  VERSION_FILE: version.txt
+
 jobs:
+  publish-validation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: "Get Previous tag"
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 0.0.1
+      - name: Get Version from ${{ env.VERSION_FILE }}
+        id: versiontag
+        run: |
+          [ ! -f "./${VERSION_FILE}" ] && echo "ERROR: ./${VERSION_FILE} missing." && exit 1
+          VERSION="$(cat "${VERSION_FILE}" | tr -d "^v")"
+          echo "VERSION=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "MINOR=${VERSION%.*}" >> "${GITHUB_ENV}"
+          echo "MAJOR=${VERSION%%.*}" >> "${GITHUB_OUTPUT}"
+      - name: Validate Version
+        run: |
+          readonly SCRIPTTERM=true
+          RESET="\033[0m"
+          RED='\033[0;31m'
+          GREEN="\033[0;32m"
+          PREVIOUSTAG="${{ steps.previoustag.outputs.tag }}"
+          PREVIOUSTAG="$(echo "${PREVIOUSTAG}" | tr -d "^v")"
+          NEWTAG=${{ steps.versiontag.outputs.VERSION }}
+          echo -e "Current tag: ${PREVIOUSTAG} \nNew Tag: ${NEWTAG}"
+          echo
+          [ "${PREVIOUSTAG}" == "${NEWTAG}" ] && echo "${RED}ERROR:${RESET} (Current tag: ${PREVIOUSTAG} == New Tag: ${NEWTAG}), Version in ${VERSION_FILE} should be higher.!" && exit 1 || true
+          echo "New Tag is ${GREEN}Valid.${RESET}"
+
   lint:
     name: Lint
+    if: always()
     runs-on: ubuntu-latest
 
     permissions:
