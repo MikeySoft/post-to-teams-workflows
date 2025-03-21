@@ -1,4 +1,6 @@
-![CI workflow](https://github.com/mikeysoft/post-to-teams-workflows/actions/workflows/continuous-integration.yml/badge.svg)![Tests workflow](https://github.com/mikeysoft/post-to-teams-workflows/actions/workflows/test-action.yml/badge.svg)
+<!-- markdownlint-disable first-line-heading -->
+![CI workflow](https://github.com/mikeysoft/post-to-teams-workflows/actions/workflows/continuous-integration.yml/badge.svg)
+![Tests workflow](https://github.com/mikeysoft/post-to-teams-workflows/actions/workflows/test-action.yml/badge.svg)
 
 # About
 
